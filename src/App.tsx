@@ -1,7 +1,5 @@
 import { useState, useEffect } from 'react'
 
-
-// type Mode = 'study' | 'paused' | 'break' | 'reset'
 type Mode = 'study' | 'break' 
 
 const STUDY_TIME = 5;
@@ -12,13 +10,6 @@ function App() {
   const [timeLeft, setTimeLeft] = useState(STUDY_TIME)
   const [isRunning, setIsRunning] = useState(false)
   const [hasStarted, setHasStarted] = useState(false)
-  
-  // const bgColor = 
-  //   mode === 'study' ? 'bg-green-200' :
-  //   mode === 'paused' ? 'bg-red-200' :
-  //   mode === 'break' ? 'bg-orange-200' :
-  //   'bg-blue-200'
-
   
   useEffect(() => {
     if (!isRunning) return
@@ -45,22 +36,13 @@ function App() {
     if (!hasStarted) {
       document.body.className = 'bg-gray-200'
     } else {
-      document.body.className = mode === 'study' ? 'bg-green-200' : 'bg-orange-200'
+      if (isRunning) {
+        document.body.className = mode === 'study' ? 'bg-green-200' : 'bg-orange-200'
+      } else {
+        document.body.className = 'bg-red-200'
+      }
     }
-  }, [hasStarted, mode])
-
-  useEffect(() => {
-    if (!isRunning) {
-      
-    } else {
-
-    }
-  }, [mode, isRunning])
-
-
-  // useEffect(() => {
-  //   document.body.addEventListener('load', )
-  // })
+  }, [hasStarted, isRunning, mode])
 
   function handleStart() {
     setHasStarted(true)
@@ -70,13 +52,11 @@ function App() {
 
   function handlePause() {
     setIsRunning(false)
-    // setMode('paused')
   }
 
   function handleReset() {
     setIsRunning(false)
     setTimeLeft(STUDY_TIME)
-    // setMode('reset')
     setTimeout(() => {
       setMode('study')
     }, 1000)
@@ -87,10 +67,6 @@ function App() {
     const formattedSeconds = String((timeLeft) % 60).padStart(2,'0')
     
     return (`${formattedMinutes}:${formattedSeconds}`)
-  }
-  
-  function handleStatus() {
-    
   }
 
   return (
