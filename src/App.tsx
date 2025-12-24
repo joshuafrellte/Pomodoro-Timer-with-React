@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react'
 
 
-type Mode = 'study' | 'paused' | 'break'
-let bgColor: string;
+type Mode = 'study' | 'paused' | 'break' | 'reset'
 
 const STUDY_TIME = 5;
 const BREAK_TIME = 3;
@@ -12,9 +11,11 @@ function App() {
   const [timeLeft, setTimeLeft] = useState(STUDY_TIME)
   const [isRunning, setIsRunning] = useState(false)
   
-  if (mode === 'study') bgColor = 'bg-green-200'
-  else if (mode === 'paused') bgColor = 'bg-red-200'
-  else if (mode === 'break') bgColor = 'bg-orange-200'
+  const bgColor = 
+    mode === 'study' ? 'bg-green-200' :
+    mode === 'paused' ? 'bg-red-200' :
+    mode === 'break' ? 'bg-orange-200' :
+    'bg-blue-200'
 
   useEffect(() => {
     if (!isRunning) return
@@ -35,11 +36,15 @@ function App() {
       setMode(mode === 'study' ? 'break' : 'study')
       setTimeLeft(mode === 'study' ? BREAK_TIME : STUDY_TIME)
     }
-  }, [timeLeft])
+  }, [timeLeft, mode])
 
   useEffect(() => {
     document.body.className = bgColor
   }, [mode])
+
+  // useEffect(() => {
+  //   document.body.addEventListener('load', )
+  // })
 
   function handleStart() {
     setIsRunning(true)
@@ -52,8 +57,11 @@ function App() {
 
   function handleReset() {
     setIsRunning(false)
-    setMode('study')
     setTimeLeft(STUDY_TIME)
+    setMode('reset')
+    setTimeout(() => {
+      setMode('study')
+    }, 1000)
   }
 
   function formatTime() {
@@ -65,32 +73,34 @@ function App() {
   
 
   return (
-    <div className="bg-gray-50 rounded-2xl shadow-xl w-[360px] sm:w-[500px] h-[250px] sm:h-[325px] absolute top-1/2 left-1/2 -translate-1/2 flex flex-col justify-center items-center gap-5 sm:gap-7">
-      <label>{mode.charAt(0).toUpperCase() + mode.slice(1)}</label>
-      <div className="text-8xl font-semibold sm:text-9xl">
-        <span>{formatTime()}</span>
-      </div>
-      <div className="flex gap-4 sm:gap-6">
-        <button 
-          className="bg-green-700 active:bg-green-900 text-white text-2xl px-4 pt-1 pb-2 w-25 sm:px-5 rounded-sm cursor-pointer"
-          disabled={isRunning}
-          onClick={() => handleStart()}
-        >
-          Start
-        </button>
-        <button 
-          className="bg-red-700 active:bg-red-900 text-white text-2xl px-4 pt-1 pb-2 w-25 sm:px-5 rounded-sm cursor-pointer"
-          disabled={!isRunning}
-          onClick={() => handlePause()}
-        >
-          Pause
-        </button>
-        <button 
-          className="bg-blue-700 active:bg-blue-900 text-white text-2xl px-4 pt-1 pb-2 w-25 sm:px-5 rounded-sm cursor-pointer"
-          onClick={() => handleReset()}
-        >
-          Reset
-        </button>
+    <div className="absolute top-1/2 left-1/2 -translate-1/2 text-center">
+      <label className="text-3xl tracking-wide font-semibold">{mode.toUpperCase()}</label>
+      <div className="bg-gray-50 rounded-2xl shadow-xl w-[360px] sm:w-[500px] h-[250px] sm:h-[325px] mt-3 flex flex-col justify-center items-center gap-5 sm:gap-7">
+        <div className="text-8xl font-semibold sm:text-9xl">
+          <span>{formatTime()}</span>
+        </div>
+        <div className="flex gap-4 sm:gap-6">
+          <button 
+            className="bg-green-700 active:bg-green-900 text-white text-2xl px-4 pt-1 pb-2 w-25 sm:px-5 rounded-sm cursor-pointer"
+            disabled={isRunning}
+            onClick={() => handleStart()}
+          >
+            Start
+          </button>
+          <button 
+            className="bg-red-700 active:bg-red-900 text-white text-2xl px-4 pt-1 pb-2 w-25 sm:px-5 rounded-sm cursor-pointer"
+            disabled={!isRunning}
+            onClick={() => handlePause()}
+          >
+            Pause
+          </button>
+          <button 
+            className="bg-blue-700 active:bg-blue-900 text-white text-2xl px-4 pt-1 pb-2 w-25 sm:px-5 rounded-sm cursor-pointer"
+            onClick={() => handleReset()}
+          >
+            Reset
+          </button>
+        </div>
       </div>
     </div>
   )
