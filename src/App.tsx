@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 
 function App() {
-  const [timeLeft, setTimeLeft] = useState(25 * 60)
+  const [timeLeft, setTimeLeft] = useState(3)
   const [isRunning, setIsRunning] = useState(false)
   const bgColor = isRunning ? "bg-green-200" : "bg-red-200"
 
@@ -9,7 +9,13 @@ function App() {
     if (!isRunning) return
 
     const intervalId = setInterval(() => {
-      setTimeLeft(t => t - 1)
+      setTimeLeft(t => {
+        if (t <= 1) {
+          setIsRunning(false)
+          return 0
+        }
+        return t-1
+      })
     }, 1000)
 
     return () => clearInterval(intervalId)
@@ -21,8 +27,8 @@ function App() {
 
 
   function formatTime() {
-    let formattedMinutes = (Math.floor(timeLeft / 60)).toFixed(0)
-    let formattedSeconds = String((timeLeft) % 60).padStart(2,'0')
+    const formattedMinutes = String(Math.floor(timeLeft / 60)).padStart(2,'0')
+    const formattedSeconds = String((timeLeft) % 60).padStart(2,'0')
     
     return (`${formattedMinutes}:${formattedSeconds}`)
   }
@@ -35,13 +41,15 @@ function App() {
       </div>
       <div className="flex gap-4 sm:gap-6">
         <button 
-          className="bg-green-700 active:bg-green-900 text-white text-2xl px-4 py-1 w-25 sm:px-5 rounded-sm cursor-pointer"
+          className="bg-green-700 active:bg-green-900 text-white text-2xl px-4 pt-1 pb-2 w-25 sm:px-5 rounded-sm cursor-pointer"
+          disabled={isRunning}
           onClick={() => setIsRunning(true)}
         >
           Start
         </button>
         <button 
-          className="bg-red-700 active:bg-red-900 text-white text-2xl px-4 py-1 w-25 sm:px-5 rounded-sm cursor-pointer"
+          className="bg-red-700 active:bg-red-900 text-white text-2xl px-4 pt-1 pb-2 w-25 sm:px-5 rounded-sm cursor-pointer"
+          disabled={!isRunning}
           onClick={() => setIsRunning(false)}
         >
           Pause
