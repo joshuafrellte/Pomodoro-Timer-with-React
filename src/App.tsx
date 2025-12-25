@@ -2,8 +2,8 @@ import { useState, useEffect } from 'react'
 
 type Mode = 'study' | 'break'
 
-const STUDY_TIME = 25 * 60;
-const BREAK_TIME = 5 * 60;
+const STUDY_TIME = 10;
+const BREAK_TIME = 5;
 
 function App() {
   const [mode, setMode] = useState<Mode>('study')
