@@ -29,9 +29,10 @@ function App() {
 
   useEffect(() => {
     if (timeLeft === 0) {
-      setMode(mode === 'study' ? 'break' : 'study')
-      setStatus(mode === 'study' ? 'break' : 'study')
-      setTimeLeft(mode === 'study' ? BREAK_TIME : STUDY_TIME)
+      const nextMode = mode === 'study' ? 'break' : 'study'
+      setMode(nextMode)
+      setStatus(nextMode)
+      setTimeLeft(nextMode === 'study' ? STUDY_TIME : BREAK_TIME)
     }
   }, [timeLeft, mode, status])
 
@@ -80,38 +81,53 @@ function App() {
   }
 
   return (
-    <div className="absolute top-1/2 left-1/2 -translate-1/2 text-center">
+    <div className="absolute top-1/2 left-1/2 -translate-1/2 text-center flex flex-col justify-center items-center">
+      <svg
+        className="absolute"
+        width="228"
+        height="228"
+        viewBox="0 0 100 100"
+      >
+        <circle
+          cx="50"
+          cy="50"
+          r="48"
+          fill="none"
+          stroke="black"
+          stroke-width="3"
+        >
+
+        </circle>
+      </svg>
       <label className="text-3xl tracking-wide font-semibold">
         {/* {mode.toUpperCase()} */} {status}
       </label>
-      <div className="bg-gray-50 rounded-2xl shadow-xl w-[360px] sm:w-[500px] h-[250px] sm:h-[325px] mt-3 flex flex-col justify-center items-center gap-5 sm:gap-7">
-        <div className="text-8xl font-semibold sm:text-9xl">
-          <span>{formatTime()}</span>
-        </div>
-        <div className="flex gap-4 sm:gap-6">
+      <div className="text-6xl font-semibold sm:text-7xl bg-white w-[224px] h-[224px] rounded-full mt-3 mb-3 flex justify-center items-center">
+        <span>{formatTime()}</span>
+      </div>
+      <div className="flex gap-3 sm:gap-4">
           <button 
-            className="bg-green-700 active:bg-green-900 text-white text-2xl px-4 pt-1 pb-2 w-25 sm:px-5 rounded-sm cursor-pointer"
+            className="bg-green-700 active:bg-green-900 text-white text-xl px-1 py-1 w-20 rounded-sm cursor-pointer"
             disabled={isRunning}
             onClick={() => handleStart()}
           >
             Start
           </button>
           <button 
-            className="bg-red-700 active:bg-red-900 text-white text-2xl px-4 pt-1 pb-2 w-25 sm:px-5 rounded-sm cursor-pointer"
+            className="bg-red-700 active:bg-red-900 text-white text-xl px-2 py-1 w-20 rounded-sm cursor-pointer"
             disabled={!isRunning}
             onClick={() => handlePause()}
           >
             Pause
           </button>
           <button 
-            className="bg-blue-700 active:bg-blue-900 text-white text-2xl px-4 pt-1 pb-2 w-25 sm:px-5 rounded-sm cursor-pointer"
+            className="bg-blue-700 active:bg-blue-900 text-white text-xl px-2 py-1 w-20 rounded-sm cursor-pointer"
             disabled={!hasStarted}
             onClick={() => handleReset()}
           >
             Reset
           </button>
         </div>
-      </div>
     </div>
   )
 }
