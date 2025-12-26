@@ -96,7 +96,7 @@ function App() {
   const strokeOffset = (1 - progress) * circumference
 
   return (
-    <div className="absolute top-1/2 left-1/2 -translate-1/2 text-center flex flex-col justify-center items-center gap-4">
+    <div className="absolute top-1/2 left-1/2 -translate-1/2 text-center flex flex-col justify-center items-center gap-4 scale-120">
       <svg
         className="absolute"
         width="227"
