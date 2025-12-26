@@ -4,8 +4,8 @@ import { RiResetLeftFill } from 'react-icons/ri';
 
 type Mode = 'study' | 'break'
 
-const STUDY_TIME = 20 ;
-const BREAK_TIME = 10 ;
+const STUDY_TIME = 25 * 60 ;
+const BREAK_TIME = 5 * 60 ;
 
 function App() {
   const [mode, setMode] = useState<Mode>('study')
@@ -51,6 +51,21 @@ function App() {
     }
   }, [hasStarted, isRunning, mode])
 
+  useEffect(() => {
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.code === 'Space') {
+        e.preventDefault()
+        handleToggle()
+      }
+      if (e.key.toLowerCase() === 'r') {
+        handleReset()
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown)
+
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [isRunning])
+
   function handleStart() {
     setHasStarted(true)
     setMode(mode === 'study' ? 'study' : 'break')
@@ -70,6 +85,7 @@ function App() {
     if (hasStarted) document.body.className = 'bg-blue-200'
     setStatus('reset')
     setTimeout(() => {
+      setHasStarted(!hasStarted)
       setMode('study')
       setStatus('welcome')
       document.body.className = 'bg-gray-200'
@@ -77,7 +93,6 @@ function App() {
   }
 
   function handleToggle() {
-    setIsRunning(isRunning ? false : true)
     if (isRunning) handlePause()
     else handleStart()
   }
@@ -101,7 +116,7 @@ function App() {
         className="absolute"
         width="227"
         height="227"
-        viewBox="0 0 100 100"
+        viewBox="0 0 98.7 100"
         transform="scale(-1, 1) rotate(-90)"
       >
         <circle
@@ -114,9 +129,10 @@ function App() {
           strokeLinecap="round"
           strokeDasharray={circumference}
           strokeDashoffset={strokeOffset}
+          style={{transition: 'stroke-dashoffset 0.33s ease'}}
         />
       </svg>
-      <label className="text-3xl tracking-wide font-semibold">
+      <label className="text-2xl tracking-wide font-semibold">
         {status}
       </label>
       <div className="text-6xl font-semibold bg-white w-[224px] h-[224px] rounded-full flex justify-center items-center">
