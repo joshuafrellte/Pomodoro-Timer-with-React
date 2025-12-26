@@ -2,8 +2,8 @@ import { useState, useEffect } from 'react'
 
 type Mode = 'study' | 'break'
 
-const STUDY_TIME = 10;
-const BREAK_TIME = 5;
+const STUDY_TIME = 20 ;
+const BREAK_TIME = 10 ;
 
 function App() {
   const [mode, setMode] = useState<Mode>('study')
@@ -80,21 +80,31 @@ function App() {
     return (`${formattedMinutes}:${formattedSeconds}`)
   }
 
+  const radius = 48;
+  const circumference = Math.PI * 2 * radius;
+  const currentModeDuration = mode === 'study' ? STUDY_TIME : BREAK_TIME;
+  const progress = timeLeft / currentModeDuration
+  const strokeOffset = (1 - progress) * circumference
+
   return (
     <div className="absolute top-1/2 left-1/2 -translate-1/2 text-center flex flex-col justify-center items-center">
       <svg
         className="absolute"
-        width="228"
-        height="228"
+        width="227"
+        height="227"
         viewBox="0 0 100 100"
+        transform="scale(-1, 1) rotate(-90)"
       >
         <circle
           cx="50"
           cy="50"
-          r="48"
+          r={radius}
           fill="none"
           stroke="black"
           stroke-width="3"
+          stroke-linecap="round"
+          stroke-dasharray={circumference}
+          stroke-dashoffset={strokeOffset}
         >
 
         </circle>
@@ -102,7 +112,7 @@ function App() {
       <label className="text-3xl tracking-wide font-semibold">
         {/* {mode.toUpperCase()} */} {status}
       </label>
-      <div className="text-6xl font-semibold sm:text-7xl bg-white w-[224px] h-[224px] rounded-full mt-3 mb-3 flex justify-center items-center">
+      <div className="text-6xl font-semibold bg-white w-[224px] h-[224px] rounded-full mt-3 mb-3 flex justify-center items-center">
         <span>{formatTime()}</span>
       </div>
       <div className="flex gap-3 sm:gap-4">
